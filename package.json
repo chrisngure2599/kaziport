@@ -1,0 +1,22 @@
+{
+  "name": "kaziport",
+  "version": "1.0.0",
+  "description": "Taarifa zote kuhusu ajira!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "kazi"
+  ],
+  "author": "Christopher Ngure",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.11",
+    "express": "^4.18.1",
+    "formidable": "^2.0.1",
+    "mysql": "^2.18.1"
+  }
+}
