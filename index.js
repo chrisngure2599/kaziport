@@ -4,6 +4,8 @@ var express = require('express');
 const res = require('express/lib/response');
 var mysql =require("mysql");
 var app =express();
+var mailer = require('./mailer');
+
 
 //Mysql database connection
 var con =mysql.createConnection({
@@ -63,6 +65,7 @@ var con =mysql.createConnection({
     // res.send("Failed to open the page"+error)
   });
 
+  let mails=1;
   const savejob=(job)=>{
     let sql="INSERT INTO `jobs`(`post`, `candidates`, `category_id`, `application_timeline`, `employee_id`, `job_summary`, `duties_and_responsibilities`, `qualification_and_experience`, `remuneration`, `link`) VALUES";
      sql+="(#post,#candidates,'1',#application_timeline:,'1',#job_summary,#duties_and_responsibilities,#qualification_and_experience,#remuneration,#link)"
@@ -75,7 +78,21 @@ var con =mysql.createConnection({
       if(response.length==0){
         con.query(sql, function (error, result) {
           if (error) throw error;
-          console.log("Done creating job"+job['post']);
+          console.log("Done creating job "+job['post']);
+          //Sending the email
+          var title="Kazi mpya: "+job['post'];
+          var sample_email="Habari #jina kazi mpya.";
+          sample_email+="<ul>"
+          sample_email+="<li>Taarifa fupi</li>"
+          sample_email+="<li>Wanaohitajika <b>"+job['candidates']+"</b></li>"
+          sample_email+="Majukumu & Ujuzi";
+          sample_email+="<p> "+job['duties_and_responsibilities']+" </p>";
+          sample_email+="<li>soma zaidi <a href='#'>Hapa</a></li>";
+          sample_email+="</ul>";
+          mails+=0.25;
+          setTimeout(() => {
+            mailer.send("Ngure",{'subject':title,"text":sample_email})
+          }, mails*10000);
         });
       }
     })
