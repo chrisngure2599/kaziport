@@ -14,7 +14,7 @@ exports.send = (user,msg)=>{
         from: 'noreply@kaziport.com',
         to: 'myfriend@yahoo.com',
         subject: msg.subject,
-        html: msg.text
+        html:msg.text
         };
         
         transporter.sendMail(mailOptions, function(error, info){
