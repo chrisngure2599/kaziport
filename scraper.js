@@ -70,6 +70,7 @@ exports.scrape=()=>{
     const savejob=(job)=>{
       //checking for duplicate
       con.query("select * from jobs where link="+job['link'],function(err,response,fields){
+        if (err) throw err;
         if(response.length==0){
           //preparation of other data;
           let sql="INSERT INTO `jobs`(`post`, `candidates`, `category_id`, `application_timeline`, `employee_id`, `job_summary`, `duties_and_responsibilities`, `qualification_and_experience`, `remuneration`, `link`) VALUES";
@@ -82,19 +83,21 @@ exports.scrape=()=>{
             if (error) throw error;
             console.log("Done creating job "+job['post']);
             //Sending the email
-            var title="Kazi mpya: "+job['post'];
-            var sample_email="Habari #jina kazi mpya.";
-            sample_email+="<ul>"
-            sample_email+="<li>Taarifa fupi</li>"
-            sample_email+="<li>Wanaohitajika <b>"+job['candidates']+"</b></li>"
-            sample_email+="Majukumu & Ujuzi";
-            sample_email+="<pre> "+job['duties_and_responsibilities']+" </pre>";
-            sample_email+="<li>soma zaidi <a href='#'>Hapa</a></li>";
-            sample_email+="</ul>";
-            mails+=0.25;
-            setTimeout(() => {
-              mailer.send("Ngure",{'subject':title,"text":sample_email})
-            }, mails*10500);
+            if(result.insertId){
+              var title="Kazi mpya: "+job['post'];
+              var sample_email="Habari #jina kazi mpya.";
+              sample_email+="<ul>"
+              sample_email+="<li>Taarifa fupi</li>"
+              sample_email+="<li>Wanaohitajika <b>"+job['candidates']+"</b></li>"
+              sample_email+="Majukumu & Ujuzi";
+              sample_email+="<pre> "+job['duties_and_responsibilities']+" </pre>";
+              sample_email+="<li>soma zaidi <a href='#'>Hapa</a></li>";
+              sample_email+="</ul>";
+              mails+=0.35;
+              setTimeout(() => {
+                mailer.send("Ngure",{'subject':title,"text":sample_email})
+              }, mails*10100);
+            }
           });
         }
       })
