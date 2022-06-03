@@ -1,17 +1,15 @@
 var axios = require('axios');
 var cheerio = require('cheerio');
-var express = require('express');
-const res = require('express/lib/response');
 var mysql =require("mysql");
 var mailer = require('./mailer');
+require('dotenv').config()
 
 
-//Mysql database connection
 var con =mysql.createConnection({
-  'host':"localhost",
-  'user':"root",
-  "password":"",
-  "database":"kaziport"
+  'host':process.env.DB_HOST,
+  'user':process.env.DB_USER,
+  "password":process.env.DB_PASSWORD,
+  "database":process.env.DB_DATABASE
 })
 
 exports.scrape=()=>{
