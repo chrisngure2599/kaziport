@@ -1,7 +1,9 @@
 var axios = require('axios');
 var cheerio = require('cheerio');
+const { random } = require('lodash');
 var mysql =require("mysql");
 var mailer = require('./mailer');
+var telegram = require('./telegram')
 require('dotenv').config()
 
 
@@ -65,6 +67,7 @@ exports.scrape=()=>{
     });
   
     let mails=1;
+    let tgs=1;
     const savejob=(job)=>{
       //checking for duplicate
       con.query("select * from jobs where link="+job['link'],function(err,response,fields){
@@ -100,14 +103,19 @@ exports.scrape=()=>{
                       sample_email+="<li>soma zaidi <a href="+job_link+">Hapa</a></li>";
                       sample_email+="</ul>";
                       mails+=0.35;
-                      if(user.email.length){
-                          setTimeout(() => {
-                            mailer.send(user,{'subject':title,"text":sample_email})
-                          }, mails*10100);
-                      }
+                      // if(user.email.length){
+                      //     setTimeout(() => {
+                      //       mailer.send(user,{'subject':title,"text":sample_email})
+                      //     }, mails*10100);
+                      // }
                     });
                 }
-              })
+              });
+              //Sending Telegram
+              tgs+=random(0.4,0.9);
+              setTimeout(()=>{
+                telegram.sendtg(job);
+              },1000*tgs);
             }
           });
         }
