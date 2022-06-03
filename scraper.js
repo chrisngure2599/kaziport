@@ -82,19 +82,32 @@ exports.scrape=()=>{
             console.log("Done creating job "+job['post']);
             //Sending the email
             if(result.insertId){
-              var title="Kazi mpya: "+job['post'];
-              var sample_email="Habari #jina kazi mpya.";
-              sample_email+="<ul>"
-              sample_email+="<li>Taarifa fupi</li>"
-              sample_email+="<li>Wanaohitajika <b>"+job['candidates']+"</b></li>"
-              sample_email+="Majukumu & Ujuzi";
-              sample_email+="<pre> "+job['duties_and_responsibilities']+" </pre>";
-              sample_email+="<li>soma zaidi <a href='#'>Hapa</a></li>";
-              sample_email+="</ul>";
-              mails+=0.35;
-              setTimeout(() => {
-                mailer.send("Ngure",{'subject':title,"text":sample_email})
-              }, mails*10100);
+              //Fetching subscribers
+              con.query('select * from subscribers',function(err,res,fields){
+                if(err) throw err;
+                let subs=[];
+                if(res.length>0){
+                    res.forEach(user => {
+                      var title="Kazi mpya: "+job['post'];
+                      var sample_email="Habari #jina kazi mpya.";
+                      sample_email=sample_email.replace("#jina",user.full_name)
+                      sample_email+="<ul>"
+                      sample_email+="<li>Taarifa fupi</li>"
+                      sample_email+="<li>Wanaohitajika <b>"+job['candidates']+"</b></li>"
+                      sample_email+="Majukumu & Ujuzi";
+                      sample_email+="<pre> "+job['duties_and_responsibilities']+" </pre>";
+                      let job_link="http://portal.ajira.go.tz/advert/display_advert/"+job.link
+                      sample_email+="<li>soma zaidi <a href="+job_link+">Hapa</a></li>";
+                      sample_email+="</ul>";
+                      mails+=0.35;
+                      if(user.email.length){
+                          setTimeout(() => {
+                            mailer.send(user,{'subject':title,"text":sample_email})
+                          }, mails*10100);
+                      }
+                    });
+                }
+              })
             }
           });
         }

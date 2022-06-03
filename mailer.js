@@ -13,7 +13,7 @@ var transporter = nodemailer.createTransport({
 exports.send = (user,msg)=>{
     var mailOptions = {
         from: 'noreply@kaziport.com',
-        to: 'myfriend@yahoo.com',
+        to: user.email,
         subject: msg.subject,
         html:msg.text
         };
