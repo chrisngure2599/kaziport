@@ -15,6 +15,7 @@ var con =mysql.createConnection({
 })
 
 exports.scrape=()=>{
+    telegram.get_users();//Getting Tg users
     let url="http://portal.ajira.go.tz/advert/index";
     axios.get(url).then(function(response){
       let html=response.data;
